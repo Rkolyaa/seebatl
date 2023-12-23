@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Морський бій bb</title>
+    <style>
+        body {
+            background-image: url('sea.gif');
+            background-size: cover;
+            color: white;
+        }
+
+        table {
+            border-collapse: collapse;
+            margin-left: 40%;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid black;
+            display: inline-block;
+        }
+
+        th,
+        td {
+            width: 30px;
+            height: 30px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #ccc;
+        }
+
+        td {
+            cursor: pointer;
+        }
+
+        .board-container {
+            display: flex;
+            flex-direction: row;
+        }
+
+        .myb {
+            position: fixed;
+            background-image: url('water.gif');
+            background-size: cover;
+            left: -15%;
+            top: 200px;
+        }
+
+        .botb {
+            position: fixed;
+            background-image: url('water2.gif');
+            background-size: cover;
+            left: 10%;
+            top: 200px;
+        }
+
+        .myname {
+            position: fixed;
+            left: 31%;
+            top: 100px;
+        }
+
+        .botname {
+            position: fixed;
+            left: 51%;
+            top: 100px;
+        }
+
+        .draw {
+            position: fixed;
+            left: 43%;
+            top: 80px;
+        }
+
+        #start-button {
+            position: fixed;
+            left: 44%;
+            top: 560px;
+        }
+
+        #you {
+            position: absolute;
+            left: 50%;
+            top: 35px;
+            width: 30px;
+        }
+
+        #you2 {
+            position: absolute;
+            left: 50%;
+            top: 60px;
+            width: 30px;
+        }
+
+        .errow {
+            width: 100px;
+            height: 100px;
+            background-size: cover;
+            position: absolute;
+            left: 44%;
+            top: 190px;
+            background-image: url('e.gif');
+            animation: rotateArrow 1s linear; / Додали анімацію обертання /
+        }
+		.bullet {
+            width: 70px;
+            height: 70px;
+          font-size:50px;
+            position: absolute;
+            left: 19%;
+            top: 200px; 
+			background-image: url('bam.gif');
+			}
+
+.plane {
+            width: 70px;
+            height: 70px;
+          font-size:50px;
+            position: absolute;
+            left: 19%;
+            top: 300px; 
+			animation:rotateplane 1s linear;}
+	@keyframes rotateplane {
+            from {
+                transform: translateX(1);
+            }
+            to {
+                transform: translateX(100);
+            }
+        }
+        @keyframes rotateArrow {
+            from {
+                transform: scaleX(1);
+            }
+            to {
+                transform: scaleX(-1);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <button id="start-button" onclick="start()">start new game</button>
+    <div>
+        <h2 class='draw'>Рахунок <br>
+            ви<input class="text" id='you' value='0'> 
+            <br>бот<input class="text" id='you2' value='0'></h2>
+    </div>
+    <div class='errow'></div>
+	<button id="shoot" onclick="shot()" class='bullet'>💣</button>
+	<button id="shoot" onclick="fly()" class='plane'>✈︎</button>
+    <div class="board-container">
+        <h2 class='myname'>Ваше поле</h2>
+        <table class='myb' id="userBoard"></table>
+
+        <h2 class='botname'>Поле комп'ютера</h2>
+        <table class='botb' id="computerBoard"></table>
+    </div>
+
+    <script>
+        var user1 = prompt('Player 1, please, input your name');
+        alert('Hello ' + user1 + '!');
+        var user2 = alert('Ваш противник - Генерал Есдес ');
+        var x = document.getElementById('you');
+
+        function start() {
+            const boardSize = 10;
+function shot() {
+alert('bam');
+}
+function fly() {
+
+}
+            function generateEmptyBoard() {
+                const board = [];
+                for (let i = 0; i < boardSize; i++) {
+                    board.push(new Array(boardSize).fill(0));
+                }
+                return board;
+            }
+
+            function renderBoard(board, elementId, clickHandler) {
+                const table = document.getElementById(elementId);
+                table.innerHTML = '';
+
+                for (let i = 0; board && i < board.length; i++) {
+                    const row = table.insertRow(0);
+                    for (let j = 0; board[i] && j < board[i].length; j++) {
+                        const cell = row.insertCell(j);
+                        cell.addEventListener('click', () => clickHandler(i, j));
+
+                        if (board[i][j] === 1) {
+                            cell.style.backgroundColor = 'white';
+                        } else if (board[i][j] === 'miss') {
+                            cell.style.backgroundColor = 'gray';
+                        } else if (board[i][j] === 'hit') {
+                            cell.style.backgroundColor = 'red';
+                            cell.textContent = 'X';
+                        } else if (board[i][j] === 'playerMove') {
+                            cell.style.backgroundColor = 'gray';
+                        } else if (board[i][j] === 'computerMove') {
+                            cell.style.backgroundColor = 'gray';
+                        } else if (board[i][j] === 'paintteritory') {
+                            cell.style.backgroundColor = 'yellow';
+                        }
+                    }
+                }
+            }
+
+            function placeShips(board) {
+                for (let i = 0; i < 20; i++) {
+                    const shipCol = Math.floor(Math.random() * boardSize);
+                    const shipRow = Math.floor(Math.random() * boardSize);
+                    board[shipRow][shipCol] = 1;
+                }
+            }
+
+            var rahynok = 0;
+            var rahynok_y_bota = 0;
+
+           
+			function userShoot(row, col) {
+        document.querySelector('.errow').style.animation = 'none';
+        void document.querySelector('.errow').offsetWidth;
+        document.querySelector('.errow').style.animation = null;
+
+        if (computerBoard[row][col] === 1) {
+            alert('Ви попали!');
+            rahynok += 1;
+            if (rahynok > 20) {
+                alert("victory");
+            }
+            document.getElementById('you').value = rahynok;
+            markShipHit(computerBoard, row, col);
+            renderBoard(computerBoard, 'computerBoard', userShoot);
+            computerShoot();
+        } else {
+            if (computerBoard[row][col] === 'hit') {
+                alert('Ви сюди уже стріляли !');
+            } else {
+                alert('Промах!');
+                computerBoard[row][col] = 'miss';
+                renderBoard(computerBoard, 'computerBoard', userShoot);
+                computerShoot();
+            }
+        }
+    }
+
+    // Додана нова функція для позначення корабля під час попадання
+    function markShipHit(board, row, col) {
+        // Позначаємо поточну клітину як потоплену
+        computerBoard[row][col] = 'hit';
+
+        // Позначаємо навколишні клітини навколо корабля жовтим кольором
+        for (let i = row - 1; i <= row + 1; i++) {
+            for (let j = col - 1; j <= col + 1; j++) {
+                if (i >= 0 && i < board.length && j >= 0 && j < board[i].length) {
+                    if (computerBoard[i][j] !== 'hit') {
+                        computerBoard[i][j] = 'paintteritory';
+                    }
+                }
+            }
+        }
+
+        // Оновлюємо дошку
+        renderBoard(board, 'userBoard', userShoot);
+    }
+
+            async function computerShoot() {
+                await delay(1000);
+                const row = Math.floor(Math.random() * boardSize);
+                const col = Math.floor(Math.random() * boardSize);
+
+                if (userBoard[row][col] === 1) {
+                    alert('Комп\'ютер попав!');
+                    rahynok_y_bota += 1;
+                    if (rahynok_y_bota > 20) {
+                        alert("victory");
+                    }
+                    document.getElementById('you2').value = rahynok_y_bota;
+					markUserShipHit(userBoard, row, col);
+                    userBoard[row][col] = 'hit';
+                    renderBoard(userBoard, 'userBoard', userShoot);
+                } else {
+                    alert('Комп\'ютер промахнувся!');
+                    userBoard[row][col] = 'miss';
+                    renderBoard(userBoard, 'userBoard', userShoot);
+                }
+                updateArrowDirection(); // Додано оновлення напряму стрілочки
+            }
+			function markUserShipHit(board, row, col) {
+        // Позначаємо поточну клітину як потоплену
+        computerBoard[row][col] = 'hit';
+
+        // Позначаємо навколишні клітини навколо корабля жовтим кольором
+        for (let i = row - 1; i <= row + 1; i++) {
+            for (let j = col - 1; j <= col + 1; j++) {
+                if (i >= 0 && i < board.length && j >= 0 && j < board[i].length) {
+                    if (userBoard[i][j] !== 'hit') {
+                        userBoard[i][j] = 'paintteritory';
+                    }
+                }
+            }
+        }
+
+        // Оновлюємо дошку
+        renderBoard(board, 'userBoard', userShoot);
+    }
+
+            const userBoard = generateEmptyBoard();
+            const computerBoard = generateEmptyBoard();
+
+            placeShips(userBoard);
+            placeShips(computerBoard);
+
+            renderBoard(userBoard, 'userBoard', userShoot);
+            renderBoard(computerBoard, 'computerBoard', userShoot); // Зміна обробника на userShoot
+        }
+
+        function delay(ms)
+ {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        function updateArrowDirection() {
+            const arrow = document.querySelector('.errow');
+            arrow.style.animation = 'none'; // Зупиняємо анімацію
+            void arrow.offsetWidth; // Змушуємо оновити стиль без анімації
+            arrow.style.animation = 'rotateArrow 0.5s linear'; // Запускаємо анімацію знову
+        }
+    </script>
+
+</body>
+
+</html>
